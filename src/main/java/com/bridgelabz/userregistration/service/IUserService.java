@@ -16,6 +16,8 @@ public interface IUserService {
 	public ResponseDTO createUserData(UserDTO userDTO);
 	
 	public ResponseDTO updateUserDataById(String id,UserDTO userDTO);
+	
+	public ResponseDTO deleteUserDataById(String id);
 
 
 	

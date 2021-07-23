@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.userregistration.dto.ResponseDTO;
@@ -47,10 +48,11 @@ public class UserService implements IUserService
 	}
 
 	@Override
-	public ResponseDTO updateUserDataById(String token, @Valid UserDTO userDTO) {
+	public ResponseDTO updateUserDataById(String id, @Valid UserDTO userDTO)
+	{
 		
-		int tokenid = TokenUtil.decodeToken(token);
-		Optional<UserModel>isUserPresent = userRespository.findById(tokenid);
+		int tokenid = TokenUtil.decodeToken(id);
+		Optional<UserModel> isUserPresent = userRespository.findById(tokenid);
 		if(isUserPresent.isPresent()) 
 		{
 			isUserPresent.get().setFirstName(userDTO.getFirstName());
@@ -61,18 +63,29 @@ public class UserService implements IUserService
 			isUserPresent.get().setUpdateDate(LocalDate.now());
 			userRespository.save(isUserPresent.get());
 			return new ResponseDTO("User Data Succefully Updated", isUserPresent.get());
-			
 		}
 		else
 		{
-			throw new UserException(400,"Contact to be Updated Not found");
+			throw new UserException(400,"User Details Not found");
 		}
-		
-		
 	}
 
-	
-	
+	@Override
+	public ResponseDTO deleteUserDataById(String id) {
+		
+		int tokenid = TokenUtil.decodeToken(id);
+		Optional<UserModel> isUserPresent = userRespository.findById(tokenid);
+		if(isUserPresent.isPresent())
+		{
+			userRespository.deleteById(tokenid);
+			return new ResponseDTO("Deleted Successfully", HttpStatus.ACCEPTED);
+		}
+		else
+		{
+			throw new UserException(400,"User Details Not found");
+		}
+	}
+
 	
 	
 }

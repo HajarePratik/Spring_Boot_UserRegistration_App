@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,10 +46,18 @@ public class UserController {
 			return new ResponseEntity<ResponseDTO>(resDTO,HttpStatus.OK);
 		}
 		@PutMapping("/update/{token}")
-		public ResponseEntity<ResponseDTO> updateUser(@PathVariable String token , @Valid @RequestBody UserDTO userDTO) {
+		public ResponseEntity<ResponseDTO> updateUser(@PathVariable String token, @Valid @RequestBody UserDTO userDTO) 
+		{
 			ResponseDTO userData = userService.updateUserDataById(token, userDTO);
 			ResponseDTO respDTO = new ResponseDTO("Updated User with id : " + token, userData);
 			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+		}
+		@DeleteMapping("/delete/{token}")
+		public ResponseEntity<ResponseDTO> deleteUser(@PathVariable String token)
+		{
+			userService.deleteUserDataById(token);
+			ResponseDTO respDTO = new ResponseDTO("Delete User with id :",token);
+			return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
 		}
 }
 		
