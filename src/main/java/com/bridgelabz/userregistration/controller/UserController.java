@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgelabz.userregistration.dto.LoginDTO;
 import com.bridgelabz.userregistration.dto.ResponseDTO;
 import com.bridgelabz.userregistration.dto.UserDTO;
 import com.bridgelabz.userregistration.model.UserModel;
@@ -58,6 +60,27 @@ public class UserController {
 			userService.deleteUserDataById(token);
 			ResponseDTO respDTO = new ResponseDTO("Delete User with id :",token);
 			return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
+		}
+		@GetMapping("/verifyemail/{token}")
+		public ResponseEntity<ResponseDTO> verifyemail(@PathVariable("token") String token)
+		{
+			return new ResponseEntity<ResponseDTO>
+			(
+					new ResponseDTO("email is verified",userService.verify(token),201,"true"),HttpStatus.ACCEPTED
+			);
+		}
+		
+		@PostMapping("/login/{token}")
+		public ResponseEntity<ResponseDTO> loginUser(@RequestBody LoginDTO loginDTO)
+		{
+			ResponseDTO respDTO = userService.loginUser(loginDTO);
+			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+		}
+		
+		@PostMapping("/forgotpassword")
+		public ResponseEntity<ResponseDTO> forgotPassword(@RequestBody LoginDTO forgotDTO, BindingResult result) {
+			ResponseDTO respDTO = userService.forgetPassword(forgotDTO);
+			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 		}
 }
 		

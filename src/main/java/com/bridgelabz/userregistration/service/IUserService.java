@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.bridgelabz.userregistration.dto.LoginDTO;
 import com.bridgelabz.userregistration.dto.ResponseDTO;
 import com.bridgelabz.userregistration.dto.UserDTO;
 import com.bridgelabz.userregistration.model.UserModel;
@@ -18,7 +19,12 @@ public interface IUserService {
 	public ResponseDTO updateUserDataById(String id,UserDTO userDTO);
 	
 	public ResponseDTO deleteUserDataById(String id);
+	
+	public UserModel verify(String token);
 
+	ResponseDTO loginUser(LoginDTO loginDTO);
+
+	ResponseDTO forgetPassword(LoginDTO loginDTO); 
 
 	
 }

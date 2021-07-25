@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.bridgelabz.userregistration.dto.LoginDTO;
 import com.bridgelabz.userregistration.dto.ResponseDTO;
 import com.bridgelabz.userregistration.dto.UserDTO;
 import com.bridgelabz.userregistration.exception.UserException;
 import com.bridgelabz.userregistration.model.UserModel;
 import com.bridgelabz.userregistration.respository.UserRespository;
+import com.bridgelabz.userregistration.util.JMSUtil;
 import com.bridgelabz.userregistration.util.TokenUtil;
 
 @Service
@@ -44,6 +46,9 @@ public class UserService implements IUserService
 			String token;
 			token = TokenUtil.createToken(createUser.getUserId());
 			System.out.println("Token:"+token);
+			String body = "http://localhost:8080/verifyemail/" + token;
+			System.out.println(body);
+			JMSUtil.sendEmail(createUser.getEmail(), "verification email for user " + createUser.getFirstName(), body);
 			return new ResponseDTO("User Successfully Added",createUser);
 	}
 
@@ -71,7 +76,8 @@ public class UserService implements IUserService
 	}
 
 	@Override
-	public ResponseDTO deleteUserDataById(String id) {
+	public ResponseDTO deleteUserDataById(String id)
+	{
 		
 		int tokenid = TokenUtil.decodeToken(id);
 		Optional<UserModel> isUserPresent = userRespository.findById(tokenid);
@@ -86,6 +92,45 @@ public class UserService implements IUserService
 		}
 	}
 
+	@Override
+	public UserModel verify(String id) 
+	{
+		int tokenid = TokenUtil.decodeToken(id);
+		UserModel verifyUser = userRespository.findById(tokenid).orElseThrow(()-> new UserException(400,"User not Exist"));
+		verifyUser.setVerify_Boolean(true);
+		userRespository.save(verifyUser);
+		return verifyUser;
+	}
+	
+	@Override
+	public ResponseDTO loginUser(LoginDTO loginDTO)
+	{
+		Optional<UserModel> isUserPresent = userRespository.findByEmail(loginDTO.getEmail());
+		boolean email = isUserPresent.get().getEmail().matches(loginDTO.getEmail());
+		boolean password = isUserPresent.get().getPassword().contains(loginDTO.getPassword());
+		
+		if(email == false && password == false)
+		{
+			throw new UserException("Authentication Failed",HttpStatus.OK,null,"false");
+		}
+		else
+		{
+			String registerToken = TokenUtil.createToken(isUserPresent.get().getUserId());
+			return new ResponseDTO("Login Succesful","Registration Token :"+registerToken);
+		}
+		
+	}
+	
+	@Override
+	public ResponseDTO forgetPassword(LoginDTO forgotDTO)
+	{
+	
+		Optional<UserModel> isUserPresent = userRespository.findByEmail(forgotDTO.getEmail());
+		String body = "http://localhost:8080/resetpassword/" + TokenUtil.createToken(isUserPresent.get().getUserId());
+		JMSUtil.sendEmail(isUserPresent.get().getEmail(), "Reset Password", body);
+		return new ResponseDTO("Reset Password", body);
+	}
+	
 	
 	
 }
