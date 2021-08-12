@@ -1,8 +1,6 @@
 package com.bridgelabz.userregistration.dto;
 
 
-import com.bridgelabz.userregistration.model.UserModel;
-
 import lombok.Data;
 
 public @Data class ResponseDTO {
@@ -16,8 +14,7 @@ public @Data class ResponseDTO {
 		this.data = data;
 	}
 
-	public ResponseDTO(String string, UserModel verify, int i, String string2) {
-		// TODO Auto-generated constructor stub
-	}
+	
 
+	
 }

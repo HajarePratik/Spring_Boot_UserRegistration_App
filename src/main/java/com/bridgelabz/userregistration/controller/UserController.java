@@ -2,8 +2,6 @@ package com.bridgelabz.userregistration.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.userregistration.dto.LoginDTO;
@@ -23,10 +21,7 @@ import com.bridgelabz.userregistration.dto.UserDTO;
 import com.bridgelabz.userregistration.model.UserModel;
 import com.bridgelabz.userregistration.service.IUserService;
 
-
 @RestController
-@RequestMapping("/userregistration")
-
 public class UserController {
 
 		@Autowired(required = true)
@@ -42,22 +37,21 @@ public class UserController {
 		@PostMapping("/create")
 		public ResponseEntity<ResponseDTO> createUserData(@RequestBody UserDTO userDTO)
 		{
-	
 			ResponseDTO userData = userService.createUserData(userDTO);
 			ResponseDTO resDTO = new ResponseDTO("Create User Details Sucessfully :"+userData, userDTO);
 			return new ResponseEntity<ResponseDTO>(resDTO,HttpStatus.OK);
 		}
-		@PutMapping("/update/{token}")
-		public ResponseEntity<ResponseDTO> updateUser(@PathVariable String token, @Valid @RequestBody UserDTO userDTO) 
+		@PutMapping("/update/{id/token}")
+		public ResponseEntity<ResponseDTO> updateUser(int id,@PathVariable String token,@RequestBody UserDTO userDTO) 
 		{
-			ResponseDTO userData = userService.updateUserDataById(token, userDTO);
+			ResponseDTO userData = userService.updateUserDataById(id,token, userDTO);
 			ResponseDTO respDTO = new ResponseDTO("Updated User with id : " + token, userData);
 			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 		}
-		@DeleteMapping("/delete/{token}")
-		public ResponseEntity<ResponseDTO> deleteUser(@PathVariable String token)
+		@DeleteMapping("/delete/{id/token}")
+		public ResponseEntity<ResponseDTO> deleteUser(int id,@PathVariable String token)
 		{
-			userService.deleteUserDataById(token);
+			userService.deleteUserDataById(id,token);
 			ResponseDTO respDTO = new ResponseDTO("Delete User with id :",token);
 			return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
 		}
@@ -66,7 +60,7 @@ public class UserController {
 		{
 			return new ResponseEntity<ResponseDTO>
 			(
-					new ResponseDTO("email is verified",userService.verify(token),201,"true"),HttpStatus.ACCEPTED
+					new ResponseDTO("email is verified",userService.verify(token)),HttpStatus.OK
 			);
 		}
 		

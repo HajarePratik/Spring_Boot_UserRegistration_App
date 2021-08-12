@@ -16,15 +16,15 @@ public interface IUserService {
 	
 	public ResponseDTO createUserData(UserDTO userDTO);
 	
-	public ResponseDTO updateUserDataById(String id,UserDTO userDTO);
+	public ResponseDTO updateUserDataById(int id,String token,UserDTO userDTO);
 	
-	public ResponseDTO deleteUserDataById(String id);
+	public ResponseDTO deleteUserDataById(int id,String token);
 	
 	public UserModel verify(String token);
 
-	ResponseDTO loginUser(LoginDTO loginDTO);
+	public ResponseDTO loginUser(LoginDTO loginDTO);
 
-	ResponseDTO forgetPassword(LoginDTO loginDTO); 
+	public ResponseDTO forgetPassword(LoginDTO loginDTO); 
 
 	
 }

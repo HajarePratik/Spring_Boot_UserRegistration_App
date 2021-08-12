@@ -53,10 +53,10 @@ public class UserService implements IUserService
 	}
 
 	@Override
-	public ResponseDTO updateUserDataById(String id, @Valid UserDTO userDTO)
+	public ResponseDTO updateUserDataById(int id,String token, @Valid UserDTO userDTO)
 	{
 		
-		int tokenid = TokenUtil.decodeToken(id);
+		int tokenid = TokenUtil.decodeToken(token);
 		Optional<UserModel> isUserPresent = userRespository.findById(tokenid);
 		if(isUserPresent.isPresent()) 
 		{
@@ -76,10 +76,10 @@ public class UserService implements IUserService
 	}
 
 	@Override
-	public ResponseDTO deleteUserDataById(String id)
+	public ResponseDTO deleteUserDataById(int id,String token)
 	{
 		
-		int tokenid = TokenUtil.decodeToken(id);
+		int tokenid = TokenUtil.decodeToken(token);
 		Optional<UserModel> isUserPresent = userRespository.findById(tokenid);
 		if(isUserPresent.isPresent())
 		{
@@ -93,9 +93,9 @@ public class UserService implements IUserService
 	}
 
 	@Override
-	public UserModel verify(String id) 
+	public UserModel verify(String token) 
 	{
-		int tokenid = TokenUtil.decodeToken(id);
+		int tokenid = TokenUtil.decodeToken(token);
 		UserModel verifyUser = userRespository.findById(tokenid).orElseThrow(()-> new UserException(400,"User not Exist"));
 		verifyUser.setVerify_Boolean(true);
 		userRespository.save(verifyUser);
