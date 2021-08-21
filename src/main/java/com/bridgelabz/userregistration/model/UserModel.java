@@ -32,6 +32,7 @@ public @Data class UserModel
 	public LocalDate updateDate;
 	public Boolean verify_Boolean;
 	
+	
 	public UserModel() {
 
 	}
