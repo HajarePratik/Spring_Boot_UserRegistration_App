@@ -25,6 +25,8 @@ public interface IUserService {
 	public ResponseDTO loginUser(LoginDTO loginDTO);
 
 	public ResponseDTO forgetPassword(LoginDTO loginDTO); 
+	
+	public Boolean verifyEmail(String token);
 
 	
 }

@@ -55,7 +55,7 @@ public class UserController {
 			ResponseDTO respDTO = new ResponseDTO("Delete User with id :",token);
 			return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
 		}
-		@GetMapping("/verifyemail/{token}")
+		@GetMapping("/verify/{token}")
 		public ResponseEntity<ResponseDTO> verifyemail(@PathVariable("token") String token)
 		{
 			return new ResponseEntity<ResponseDTO>
@@ -63,14 +63,17 @@ public class UserController {
 					new ResponseDTO("email is verified",userService.verify(token)),HttpStatus.OK
 			);
 		}
-		
+		@GetMapping("/verifyemail/{token}")
+		public Boolean isValid(@PathVariable("token") String token) 
+		{
+		    return userService.verifyEmail(token);
+		}
 		@PostMapping("/login/{token}")
 		public ResponseEntity<ResponseDTO> loginUser(@RequestBody LoginDTO loginDTO)
 		{
 			ResponseDTO respDTO = userService.loginUser(loginDTO);
 			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 		}
-		
 		@PostMapping("/forgotpassword")
 		public ResponseEntity<ResponseDTO> forgotPassword(@RequestBody LoginDTO forgotDTO, BindingResult result) {
 			ResponseDTO respDTO = userService.forgetPassword(forgotDTO);

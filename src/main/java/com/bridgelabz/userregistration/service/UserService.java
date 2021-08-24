@@ -102,6 +102,8 @@ public class UserService implements IUserService
 		return verifyUser;
 	}
 	
+	
+	
 	@Override
 	public ResponseDTO loginUser(LoginDTO loginDTO)
 	{
@@ -129,6 +131,25 @@ public class UserService implements IUserService
 		String body = "http://localhost:8080/resetpassword/" + TokenUtil.createToken(isUserPresent.get().getUserId());
 		JMSUtil.sendEmail(isUserPresent.get().getEmail(), "Reset Password", body);
 		return new ResponseDTO("Reset Password", body);
+	}
+
+	@Override
+	public Boolean verifyEmail(String token) 
+	{
+		
+		int tokenid = TokenUtil.decodeToken(token);
+		UserModel verifyUser = userRespository.findById(tokenid).orElseThrow(()-> new UserException(400,"User not Exist"));
+		verifyUser.setVerify_Boolean(true);
+		userRespository.save(verifyUser);
+		if(verifyUser != null)
+		{
+			return true;
+		} 
+		else 
+		{
+			return false;
+		}
+		
 	}
 	
 	
