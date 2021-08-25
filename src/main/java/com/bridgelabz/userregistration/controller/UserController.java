@@ -41,39 +41,41 @@ public class UserController {
 			ResponseDTO resDTO = new ResponseDTO("Create User Details Sucessfully :"+userData, userDTO);
 			return new ResponseEntity<ResponseDTO>(resDTO,HttpStatus.OK);
 		}
-		@PutMapping("/update/{id/token}")
+		@PutMapping("/update/{token}/{id}")
 		public ResponseEntity<ResponseDTO> updateUser(int id,@PathVariable String token,@RequestBody UserDTO userDTO) 
 		{
 			ResponseDTO userData = userService.updateUserDataById(id,token, userDTO);
 			ResponseDTO respDTO = new ResponseDTO("Updated User with id : " + token, userData);
 			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 		}
-		@DeleteMapping("/delete/{id/token}")
+		@DeleteMapping("/delete/{token}/{id}")
 		public ResponseEntity<ResponseDTO> deleteUser(int id,@PathVariable String token)
 		{
 			userService.deleteUserDataById(id,token);
 			ResponseDTO respDTO = new ResponseDTO("Delete User with id :",token);
 			return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
 		}
-		@GetMapping("/verify/{token}")
-		public ResponseEntity<ResponseDTO> verifyemail(@PathVariable("token") String token)
+		@GetMapping("/isuserpresent/{token}")
+		public ResponseEntity<ResponseDTO> isUserPresent(@PathVariable("token") String token)
 		{
 			return new ResponseEntity<ResponseDTO>
 			(
-					new ResponseDTO("email is verified",userService.verify(token)),HttpStatus.OK
+					new ResponseDTO("User is present",userService.isUserPresent(token)),HttpStatus.OK
 			);
 		}
+		
 		@GetMapping("/verifyemail/{token}")
-		public Boolean isValid(@PathVariable("token") String token) 
+		public Boolean verifyEmail(@PathVariable("token") String token)
 		{
-		    return userService.verifyEmail(token);
+			return userService.verifyEmail(token);
 		}
-		@PostMapping("/login/{token}")
+		@PostMapping("/login")
 		public ResponseEntity<ResponseDTO> loginUser(@RequestBody LoginDTO loginDTO)
 		{
 			ResponseDTO respDTO = userService.loginUser(loginDTO);
 			return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 		}
+		
 		@PostMapping("/forgotpassword")
 		public ResponseEntity<ResponseDTO> forgotPassword(@RequestBody LoginDTO forgotDTO, BindingResult result) {
 			ResponseDTO respDTO = userService.forgetPassword(forgotDTO);

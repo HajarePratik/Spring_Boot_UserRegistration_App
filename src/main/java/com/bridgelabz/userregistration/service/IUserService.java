@@ -20,13 +20,14 @@ public interface IUserService {
 	
 	public ResponseDTO deleteUserDataById(int id,String token);
 	
-	public UserModel verify(String token);
+	public UserModel isUserPresent(String token);
 
 	public ResponseDTO loginUser(LoginDTO loginDTO);
 
-	public ResponseDTO forgetPassword(LoginDTO loginDTO); 
-	
+	public ResponseDTO forgetPassword(LoginDTO loginDTO);
+
 	public Boolean verifyEmail(String token);
+
 
 	
 }

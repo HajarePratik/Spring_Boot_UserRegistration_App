@@ -93,7 +93,7 @@ public class UserService implements IUserService
 	}
 
 	@Override
-	public UserModel verify(String token) 
+	public UserModel isUserPresent(String token) 
 	{
 		int tokenid = TokenUtil.decodeToken(token);
 		UserModel verifyUser = userRespository.findById(tokenid).orElseThrow(()-> new UserException(400,"User not Exist"));
@@ -102,7 +102,22 @@ public class UserService implements IUserService
 		return verifyUser;
 	}
 	
-	
+	@Override
+	public Boolean verifyEmail(String token) 
+	{
+		int tokenid = TokenUtil.decodeToken(token);
+		UserModel verifyUser = userRespository.findById(tokenid).orElseThrow(()-> new UserException(400,"User not Exist"));
+		verifyUser.setVerify_Boolean(true);
+		userRespository.save(verifyUser);
+		if(verifyUser !=null)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	
 	@Override
 	public ResponseDTO loginUser(LoginDTO loginDTO)
@@ -132,26 +147,6 @@ public class UserService implements IUserService
 		JMSUtil.sendEmail(isUserPresent.get().getEmail(), "Reset Password", body);
 		return new ResponseDTO("Reset Password", body);
 	}
-
-	@Override
-	public Boolean verifyEmail(String token) 
-	{
-		
-		int tokenid = TokenUtil.decodeToken(token);
-		UserModel verifyUser = userRespository.findById(tokenid).orElseThrow(()-> new UserException(400,"User not Exist"));
-		verifyUser.setVerify_Boolean(true);
-		userRespository.save(verifyUser);
-		if(verifyUser != null)
-		{
-			return true;
-		} 
-		else 
-		{
-			return false;
-		}
-		
-	}
-	
 	
 	
 }
